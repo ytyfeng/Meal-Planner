@@ -7,14 +7,79 @@
 		<title></title>
 
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{% static '/life/vendors/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
 
-		<script src="{% static '/life/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
-		<script src="{% static '/life/vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
 	</head>
 	<body>
 		<!-- Your layout here -->
+    <h1>Submit a recipe!</h1>
+    <form action="recipe/" method="post">
+    <label for="recipe">Recipe name: </label>
+    <input id="recipe" type="text" name="recipe" value="{{ name }}"><br>
+    <label for="recipe">Time to cook: </label>
+    <input id="recipe" type="text" name="recipe" value="{{ time }}"><br>
+    <label for="recipe">Skill Level: </label>
+    <select name="recipe">
+        <option value="easy {{ skill }}">Easy</option>
+        <option value="medium {{ skill }}">Medium</option>
+        <option value="hard {{ skill }}">Hard</option>
+        <option value="advanced {{ skill }}">Advanced</option>
+    </select>
+    <!-- <input id="recipe" type="text" name="recipe" value="{{ skill }}">--> <br>
+    <label for="recipe">Ingredients: </label>
+    <input id="recipe" type="text" name="recipe" value="{{ ingredients }}"><br>
+    <label for="recipe">Instruction: </label>
+    <input id="recipe" type="text" name="recipe" value="{{ instruction }}"><br>
+    <input type="submit" value="Add">
+    </form>
+  
+    <script>
+    // using jQuery
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    var csrftoken = getCookie('csrftoken');
+    //var csrftoken = Cookies.get('csrftoken');
+      
+    $("submit")
+      .submit()
+      .click( function() {
 
+      var postdata = {
+        'name':$("input").val(),
+      };
+      
+      console.log(postdata);
+
+      $.ajax({
+        url: "life/recipe/",
+        method: "POST",
+        headers: {"X-CSRFToken":csrftoken},
+        data: JSON.stringify(postdata),
+        contentType: "application/json",
+        dataType: "json"
+      });
+    });
+      
+     //$.getJSON('life/')
+     
+      
+    </script>
+    
 	</body>
 </html>
